@@ -6,11 +6,14 @@ The main file for playing chess with Pygame over a local network
 from chess import Chess
 import pygame
 import os
+import pickle
+from pprint import pprint
 
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Chess PvP")
 BOARD = pygame.image.load(os.path.join('assets', 'chess_board.png'))
+# db = {}
 
 
 def pos_to_pix(pos, width):
@@ -117,7 +120,7 @@ def scale_board(chess):
 
 def main():
     """
-    TODO
+    The main function for running Chess with Pygame
     """
     chess = Chess()
     pygame.init()
@@ -135,10 +138,15 @@ def main():
         border = (50 / 900) * width
         tile_size = (100 / 900) * width
 
+        dbfile = open('game_pickle', 'rb')
+        chess = pickle.load(dbfile)
+
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                elif event.key == pygame.K_c:
+                    chess = Chess()
             elif event.type == pygame.QUIT:
                 run = False
 
@@ -165,8 +173,14 @@ def main():
         else:
             draw_window(chess, width=x, height=y)
 
+        dbfile = open('game_pickle', 'wb')
+        pickle.dump(chess, dbfile)
+
     pygame.quit()
 
 
 if __name__ == '__main__':
+    print("Welcome to Chess!")
+    print("Game data will persist upon exit.")
+    print("Press esc to quit, or 'c' to start a new game.")
     main()
