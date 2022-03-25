@@ -133,7 +133,7 @@ class Chess:
                     if self.get_piece_by_square(move).get_color() != piece.get_color():
                         if piece.get_piece_type() == "Pawn":
                             # pawn is unique in being only able to attack diagonally
-                            if move[0] != piece.get_position()[0]:
+                            if move[0] != piece.get_position():
                                 targets.append(move)
                         else:
                             targets.append(move)

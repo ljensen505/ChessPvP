@@ -128,11 +128,12 @@ def main():
     pygame.init()
     pygame.display.set_caption("Chess PvP")
     run = True
+    changes = True
     move = {
         'sq_from': None,
         'sq_to': None
     }
-    serve()  # serve the game directory locally
+    # serve()  # serve the game directory locally
     print(PLAYER_2)
 
     while run:
@@ -143,11 +144,14 @@ def main():
         border = (50 / 900) * width
         tile_size = (100 / 900) * width
 
-        if PLAYER_2:
-            dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'rb')
-        else:
-            dbfile = open('game_pickle', 'rb')
-        chess = pickle.load(dbfile)
+        if changes:
+            if PLAYER_2:
+                dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'rb')
+            else:
+                dbfile = open('game_pickle', 'rb')
+            chess = pickle.load(dbfile)
+            print("game loaded!")
+            changes = False
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -172,6 +176,7 @@ def main():
             if move['sq_from'] and move['sq_to']:
                 # make the actual move
                 chess.make_move(move['sq_from'], move['sq_to'])
+                changes = True
 
                 # reset
                 move = {
@@ -184,9 +189,14 @@ def main():
         else:
             draw_window(chess, width=x, height=y)
 
-        # save the new board
-        dbfile = open('game_pickle', 'wb')
-        pickle.dump(chess, dbfile)
+        if changes:
+            # save the new board
+            try:
+                dbfile = open('game_pickle', 'wb')
+                print("saved the game!")
+            except OSError:
+                continue
+            pickle.dump(chess, dbfile)
 
     pygame.quit()
 
