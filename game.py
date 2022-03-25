@@ -106,7 +106,11 @@ def draw_window(chess, sq_from=None, width=WIDTH, height=HEIGHT):
                 WIN.blit(pygame.transform.scale(image, (img_size, img_size)), (pos_to_pix(piece.get_position(), width)))
 
     pygame.display.update()
-    pygame.display.set_mode((width, height), pygame.RESIZABLE)
+
+    # redraw the window if it has been resized
+    w, h = pygame.display.get_surface().get_size()
+    if w != width and h != height:
+        scale_board(chess)
 
 
 def scale_board(chess):
@@ -134,7 +138,6 @@ def main():
         'sq_to': None
     }
     # serve()  # serve the game directory locally
-    print(PLAYER_2)
 
     while run:
         x, y = WIN.get_size()
@@ -144,14 +147,19 @@ def main():
         border = (50 / 900) * width
         tile_size = (100 / 900) * width
 
-        if changes:
-            if PLAYER_2:
+        if PLAYER_2:
+
+            try:
                 dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'rb')
-            else:
+                chess = pickle.load(dbfile)
+            except FileNotFoundError:
+                chess = Chess()
+        else:
+            try:
                 dbfile = open('game_pickle', 'rb')
-            chess = pickle.load(dbfile)
-            print("game loaded!")
-            changes = False
+                chess = pickle.load(dbfile)
+            except:
+                chess = Chess()
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -159,6 +167,7 @@ def main():
                     run = False
                 elif event.key == pygame.K_c:
                     chess = Chess()
+                    changes = True
             elif event.type == pygame.QUIT:
                 run = False
 
@@ -176,6 +185,7 @@ def main():
             if move['sq_from'] and move['sq_to']:
                 # make the actual move
                 chess.make_move(move['sq_from'], move['sq_to'])
+                print("made move!")
                 changes = True
 
                 # reset
@@ -190,13 +200,15 @@ def main():
             draw_window(chess, width=x, height=y)
 
         if changes:
-            # save the new board
-            try:
+            if PLAYER_2:
+                dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'wb')
+                pickle.dump(chess, dbfile)
+            else:
                 dbfile = open('game_pickle', 'wb')
-                print("saved the game!")
-            except OSError:
-                continue
-            pickle.dump(chess, dbfile)
+                # print("saved the game!")
+                pickle.dump(chess, dbfile)
+            changes = False
+            print("game saved!")
 
     pygame.quit()
 
