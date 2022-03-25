@@ -25,11 +25,14 @@ def pos_to_pix(pos, width):
     :param width: the width of the Pygame window
     :return: pixel as tuple
     """
-    border = (50 / 900) * width
-    tile_size = (100 / 900) * width
+    border = (5 / 90) * width
+    tile_size = (1 / 9) * width
+
+    # ASCII to coordinates
     x_pix = border + (ord(pos[0]) - 97) * tile_size
     y_pix = border + (8 - int(pos[1])) * tile_size
     pix_tuple = (x_pix, y_pix)
+
     return pix_tuple
 
 
@@ -124,6 +127,28 @@ def scale_board(chess):
     pygame.display.set_mode((x, y), pygame.RESIZABLE)
 
 
+def greeting():
+    print("Welcome to Chess!")
+    print("Game data will persist upon exit.")
+    print("Press 'esc' to quit, or 'c' to start a new game.")
+
+
+def open_game(game_save):
+    """
+    Opens the pickle file and restores (or initializes) the playable Chess object
+    :param game_save: file path
+    :return: chess object
+    """
+    try:
+        dbfile = open(game_save, 'rb')
+        chess = pickle.load(dbfile)
+    except:
+        # something has gone wrong with the file, such as it not existing, so let's start over.
+        chess = Chess()
+
+    return chess
+
+
 def main():
     """
     The main function for running Chess with Pygame
@@ -137,29 +162,29 @@ def main():
         'sq_from': None,
         'sq_to': None
     }
-    # serve()  # serve the game directory locally
+
+    # specify file path based upon player number
+    if PLAYER_2:
+        game_save = '/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle'
+    else:
+        game_save = 'game_pickle'
 
     while run:
         x, y = WIN.get_size()
         x = max(x, y)
         y = max(x, y)
         width = x
-        border = (50 / 900) * width
-        tile_size = (100 / 900) * width
+        border = (5 / 90) * width  # these numbers come from the original file dimensions
+        tile_size = (1 / 9) * width
 
-        if PLAYER_2:
+        try:
+            dbfile = open(game_save, 'rb')
+            chess = pickle.load(dbfile)
+        except:
+            # something has gone wrong with the file, such as it not existing, so let's start over.
+            chess = Chess()
 
-            try:
-                dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'rb')
-                chess = pickle.load(dbfile)
-            except FileNotFoundError:
-                chess = Chess()
-        else:
-            try:
-                dbfile = open('game_pickle', 'rb')
-                chess = pickle.load(dbfile)
-            except:
-                chess = Chess()
+        # chess = open_game(game_save)
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -185,7 +210,7 @@ def main():
             if move['sq_from'] and move['sq_to']:
                 # make the actual move
                 chess.make_move(move['sq_from'], move['sq_to'])
-                print("made move!")
+                # print("made move!")
                 changes = True
 
                 # reset
@@ -200,13 +225,8 @@ def main():
             draw_window(chess, width=x, height=y)
 
         if changes:
-            if PLAYER_2:
-                dbfile = open('/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle', 'wb')
-                pickle.dump(chess, dbfile)
-            else:
-                dbfile = open('game_pickle', 'wb')
-                # print("saved the game!")
-                pickle.dump(chess, dbfile)
+            dbfile = open(game_save, 'wb')
+            pickle.dump(chess, dbfile)
             changes = False
             print("game saved!")
 
@@ -214,7 +234,7 @@ def main():
 
 
 if __name__ == '__main__':
-    print("Welcome to Chess!")
-    print("Game data will persist upon exit.")
-    print("Press 'esc' to quit, or 'c' to start a new game.")
+    if not PLAYER_2:
+        serve()
+    greeting()
     main()
