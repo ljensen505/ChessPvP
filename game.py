@@ -1,6 +1,6 @@
 """
 Written by Lucas Jensen for BeaverHacks Spring 2022
-Last updated 3/24/2022
+Last updated 3/25/2022
 The main file for playing chess with Pygame over a local network
 """
 import os
@@ -11,11 +11,24 @@ import pygame
 
 from chess import Chess
 from server import serve
+from errors import CLAError
 
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 BOARD = pygame.image.load(os.path.join('assets', 'chess_board.png'))
-PLAYER_2 = len(sys.argv) > 1
+
+
+def get_player():
+    """
+    Checks for valid and existent command line arguments
+    :return: bool
+    """
+    if len(sys.argv) != 2:
+        raise CLAError("One command line argument required.")
+    elif sys.argv[1].lower() not in ["host", "player2"]:
+        raise CLAError("Must specify 'host' or 'player2'")
+
+    return sys.argv[1]
 
 
 def pos_to_pix(pos, width):
@@ -153,7 +166,8 @@ def main():
     """
     The main function for running Chess with Pygame
     """
-    chess = Chess()
+    player = get_player()
+    # chess = Chess()
     pygame.init()
     pygame.display.set_caption("Chess PvP")
     run = True
@@ -164,12 +178,14 @@ def main():
     }
 
     # specify file path based upon player number
-    if PLAYER_2:
+    if player == "player2":
         game_save = '/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle'
     else:
         game_save = 'game_pickle'
+        serve()  # start the server to share the pickle file
 
     while run:
+        # the main loop for running the game
         x, y = WIN.get_size()
         x = max(x, y)
         y = max(x, y)
@@ -177,6 +193,7 @@ def main():
         border = (5 / 90) * width  # these numbers come from the original file dimensions
         tile_size = (1 / 9) * width
 
+        # open the pickle file to restore a game, or start from scratch
         try:
             dbfile = open(game_save, 'rb')
             chess = pickle.load(dbfile)
@@ -184,13 +201,13 @@ def main():
             # something has gone wrong with the file, such as it not existing, so let's start over.
             chess = Chess()
 
-        # chess = open_game(game_save)
-
+        # get user input
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 elif event.key == pygame.K_c:
+                    # clears the board to start a new game
                     chess = Chess()
                     changes = True
             elif event.type == pygame.QUIT:
@@ -219,11 +236,13 @@ def main():
                     'sq_to': None
                 }
 
+        # update window
         if move['sq_from']:
             draw_window(chess, sq_from=move['sq_from'], width=x, height=y)
         else:
             draw_window(chess, width=x, height=y)
 
+        # only load the pickle file if changes have been made
         if changes:
             dbfile = open(game_save, 'wb')
             pickle.dump(chess, dbfile)
@@ -234,7 +253,5 @@ def main():
 
 
 if __name__ == '__main__':
-    if not PLAYER_2:
-        serve()
     greeting()
     main()
