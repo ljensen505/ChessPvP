@@ -64,6 +64,8 @@ Known issues
 Chess in action
 ------------
 
+<a href="https://youtu.be/BNQgmiwOUjk">Demo on YouTube</a>
+
 ![Start](assets/start_board.png)
 
 ![Mid](assets/mid_game.png)
