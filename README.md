@@ -1,0 +1,70 @@
+Chess PvP || Beaverhacks Spring 2022
+==============================
+
+Chess built with Pygame, which can either be played alone or between two computers over the same network.  This project 
+was built with Python and Pygame
+
+Getting Started
+------------
+There are two Python modules you'll want to have installed, along with Python3.  Other modules are used, but are built-in
+
+`pip install pygame` <br>
+`pip install colorama` <br>
+
+The colorama module might not be necessary if you only run `game.py`, but is used extensively for terminal interactions
+with the backend.
+
+
+The project contains several files, which are described as follows:
+- `game.py` The main file for playing the game
+- `server.py` A very simple server which allows the pickle file to be shared over the local network  
+- `pieces.py` Various classes for each Chess piece
+- `board.py`  A class for creating the board. Only used for backend testing.
+- `/assets` A collection of images that are used to render the game window 
+
+
+To run the game
+------------
+
+To play a game of Chess on a single computer:
+
+From the project directory, run `python game.py host`  
+
+Depending on your OS, you may need to use `python3` instead. This will launch the game and show a few helpful tips, which are as follows
+- Press 'esc' or close the window to quit the game
+- Press 'c' to clear the game and start anew.
+- Your server will start automatically, though a 2nd person joining is not necessary.
+
+To join the game
+------------
+
+From the 2nd computer, connect to the same network as the host, run:
+
+`python game.py player2`
+
+Including `host` or `player2` as a command line argument when starting the program is a requirement.
+
+ Players should decide amongst themselves who will be which color. Just like a real game of Chess, there is no mechanism
+in place to prevent a player from touching the other players pieces, or to prevent a third person from coming by and messing things up. 
+ We are all adults here.
+
+Known issues
+------------
+- The game logic is incomplete. A few more complex moves, such an en passant and castling, have not been implemented
+- There is no visual prompt in the game window for Check, though a message is printed in the terminal
+- There is no prompt whatsoever for checkmate, though the game does lock up
+
+[//]: # (Sample Project Usage)
+
+[//]: # (------------)
+
+[//]: # ()
+[//]: # (Imgs and Gifs to be inserted here)
+
+
+    
+
+
+--------
+
+<p><small>Project built solely by Lucas Jensen for <a href="https://beaverhacks-spring-2022.devpost.com/">BeaverHacks Spring 2022: Gamify</a></small></p>

@@ -162,27 +162,48 @@ def open_game(game_save):
     return chess
 
 
+def prep_game():
+    """
+    Prepared Pygame to run Chess
+    :return: player string
+    """
+    pygame.init()
+    pygame.display.set_caption("Chess PvP")
+    icon = pygame.image.load('assets/white_queen.png')
+    pygame.display.set_icon(icon)
+
+    player = get_player()
+
+    if player == "host":
+        serve()  # start the server to share the pickle file
+
+    return player
+
+
+def get_path(player):
+    """
+    Determines the file path for the pickled save file
+    :param player: string of which player is being played as
+    :return: string: file path
+    """
+    if player == "player2":
+        return '/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle'
+
+    return 'game_pickle'
+
+
 def main():
     """
     The main function for running Chess with Pygame
     """
-    player = get_player()
-    # chess = Chess()
-    pygame.init()
-    pygame.display.set_caption("Chess PvP")
+    player = prep_game()
     run = True
     changes = True
     move = {
         'sq_from': None,
         'sq_to': None
     }
-
-    # specify file path based upon player number
-    if player == "player2":
-        game_save = '/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle'
-    else:
-        game_save = 'game_pickle'
-        serve()  # start the server to share the pickle file
+    game_save = get_path(player)  # specify file path based upon player number
 
     while run:
         # the main loop for running the game
@@ -247,7 +268,7 @@ def main():
             dbfile = open(game_save, 'wb')
             pickle.dump(chess, dbfile)
             changes = False
-            print("game saved!")
+            # print("game saved!")
 
     pygame.quit()
 

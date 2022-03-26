@@ -51,7 +51,7 @@ class Chess:
                 self._check_for_check()
 
                 # check for checkmate
-
+                # TODO :(
 
                 # check for self check
                 for piece in self._pieces:
@@ -63,14 +63,11 @@ class Chess:
                                 opponent.set_position(sq_to)
                             self._update_legal_moves()
                             self._update_targets()
-                            # self.print_board()
+
                             return False
 
                 self._turn_count += 1
-                print(self._game_state)
-                # self.print_board()
-                # if self._is_checkmate(sq_from, sq_to):
-                #     self._game_state = "CHECKMATE"
+
                 return True
 
         return False
@@ -525,6 +522,7 @@ class Chess:
     def print_board(self):
         """
         prints the current board, including grid labels
+        This method is only used for backend testing.
         :return: nothing
         """
         for row in range(9):
@@ -700,9 +698,4 @@ class Chess:
 if __name__ == "__main__":
     game = Chess()
     game.print_board()
-    # game.make_move('e2', 'e4')
-    # game.make_move('a7', 'a5')
-    # game.make_move('d1', 'f3')
-    # game.make_move('a8', 'a6')
-    # game.make_move('f1', 'c4')
-    # game.make_move('b8', 'c6')
+
