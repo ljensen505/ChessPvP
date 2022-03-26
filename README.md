@@ -48,18 +48,27 @@ Including `host` or `player2` as a command line argument when starting the progr
 in place to prevent a player from touching the other players pieces, or to prevent a third person from coming by and messing things up. 
  We are all adults here.
 
+Cool features!
+------------
+- The game window can be resized! Aspect ratios of the window and all assets are maintained. This has been great for playing on computers with different monitor sizes.
+- You can play a game of Chess exclusively in the terminal, if you so choose. Just run `chess.py` instead, with no command line arguments
+- Game data persists via pickling. Even if only playing on one computer, you can exit the game and resume it later
+
 Known issues
 ------------
 - The game logic is incomplete. A few more complex moves, such an en passant and castling, have not been implemented
 - There is no visual prompt in the game window for Check, though a message is printed in the terminal
 - There is no prompt whatsoever for checkmate, though the game does lock up
+- The way this is served locally is very specific to my setup. This app is not flexible and will not other machines without significant modification. As such, I'd like to re-write it at some point to use CRUD operations and a real database.
 
-[//]: # (Sample Project Usage)
+Chess in action
+------------
 
-[//]: # (------------)
+![Start](assets/start_board.png)
 
-[//]: # ()
-[//]: # (Imgs and Gifs to be inserted here)
+![Mid](assets/mid_game.png)
+
+![PvP](assets/PvP.jpg)
 
 
     
