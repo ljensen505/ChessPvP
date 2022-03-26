@@ -66,6 +66,8 @@ Chess in action
 
 <a href="https://youtu.be/BNQgmiwOUjk">Demo on YouTube</a>
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BNQgmiwOUjk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ![Start](assets/start_board.png)
 
 ![Mid](assets/mid_game.png)
