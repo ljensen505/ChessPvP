@@ -64,7 +64,7 @@ Known issues
 Chess in action
 ------------
 
-<a href="https://youtu.be/BNQgmiwOUjk">Demo on YouTube</a>
+<a href="https://www.youtube.com/watch?v=y30Trim7Tio&ab_channel=LucasJensen">Demo on YouTube</a>
 
 ![Start](assets/start_board.png)
 

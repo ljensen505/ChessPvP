@@ -1,6 +1,6 @@
 """
 Written by Lucas Jensen
-Last updated 3/24/2022
+Last updated 3/26/2022
 The Chess class which contains a majority of the gameplay logic
 """
 from pieces import Pawn, Rook, Bishop, Knight, Queen, King

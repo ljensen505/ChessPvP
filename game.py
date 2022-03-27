@@ -1,6 +1,6 @@
 """
 Written by Lucas Jensen for BeaverHacks Spring 2022
-Last updated 3/25/2022
+Last updated 3/26/2022
 The main file for playing chess with Pygame over a local network
 """
 import os
