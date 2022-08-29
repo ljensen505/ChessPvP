@@ -26,7 +26,7 @@ To run the game
 
 To play a game of Chess on a single computer:
 
-From the project directory, run `python game.py host`  
+From the project directory, run `python main.py host`  
 
 Depending on your OS, you may need to use `python3` instead. This will launch the game and show a few helpful tips, which are as follows
 - Press `esc` or close the window to quit the game
