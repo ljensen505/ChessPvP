@@ -271,7 +271,7 @@ def main():
             # print("game saved!")
 
     pygame.quit()
-    sys.exit(g)
+    sys.exit()
 
 
 if __name__ == '__main__':

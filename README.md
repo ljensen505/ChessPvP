@@ -6,9 +6,10 @@ was built with Python and Pygame
 
 Getting Started
 ------------
-Create a virtual environment in the main directory
-`python3 -m venv venv` or with your preferred method. Followed by:
-`activate your venv`
+- Clone this repo to your machine. <br>
+- Create a virtual environment in the main directory <br>
+`python3 -m venv venv` or with your preferred method. <br>Followed by:<br>
+`activate your venv` <br>
 `pip install -r requirements.txt` <br>
 
 
