@@ -6,17 +6,14 @@ was built with Python and Pygame
 
 Getting Started
 ------------
-There are two Python modules you'll want to have installed, along with Python3.  Other modules are used, but are built-in
-
-`pip install pygame` <br>
-`pip install colorama` <br>
-
-The colorama module might not be necessary if you only run `game.py`, but is used extensively for terminal interactions
-with the backend.
+Create a virtual environment in the main directory
+`python3 -m venv venv` or with your preferred method. Followed by:
+`activate your venv`
+`pip install -r requirements.txt` <br>
 
 
 The project contains several files, which are described as follows:
-- `game.py` The main file for playing the game
+- `main.py` The main file for playing the game
 - `server.py` A very simple server which allows the pickle file to be shared over the local network  
 - `pieces.py` Various classes for each Chess piece
 - `board.py`  A class for creating the board. Only used for backend testing.
@@ -31,8 +28,8 @@ To play a game of Chess on a single computer:
 From the project directory, run `python game.py host`  
 
 Depending on your OS, you may need to use `python3` instead. This will launch the game and show a few helpful tips, which are as follows
-- Press 'esc' or close the window to quit the game
-- Press 'c' to clear the game and start anew.
+- Press `esc` or close the window to quit the game
+- Press `c` to clear the game and start anew.
 - Your server will start automatically, though a 2nd person joining is not necessary.
 
 To join the game

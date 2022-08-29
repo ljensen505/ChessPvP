@@ -10,8 +10,8 @@ import sys
 import pygame
 
 from chess import Chess
-from server import serve
 from errors import CLAError
+from server import serve
 
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
@@ -23,10 +23,8 @@ def get_player():
     Checks for valid and existent command line arguments
     :return: bool
     """
-    if len(sys.argv) != 2:
-        raise CLAError("One command line argument required.")
-    elif sys.argv[1].lower() not in ["host", "player2"]:
-        raise CLAError("Must specify 'host' or 'player2'")
+    if len(sys.argv) != 2 or sys.argv[1].lower() not in ["host", "player2"]:
+        raise CLAError("One command line argument required. Must specify 'host' or 'player2'")
 
     return sys.argv[1]
 
@@ -110,7 +108,7 @@ def draw_window(chess, sq_from=None, width=WIDTH, height=HEIGHT):
         if not piece.get_is_captured():
             file_name = os.path.join("assets", piece.get_image())
             image = pygame.image.load(file_name)
-            img_size = (100 / 900) * width
+            img_size = int((100 / 900) * width)
             if sq_from:
                 if sq_from == piece.get_position():
                     mouse_pos = pygame.mouse.get_pos()
@@ -174,8 +172,8 @@ def prep_game():
 
     player = get_player()
 
-    if player == "host":
-        serve()  # start the server to share the pickle file
+    # if player == "host":
+    #     serve()  # start the server to share the pickle file
 
     return player
 
@@ -187,15 +185,17 @@ def get_path(player):
     :return: string: file path
     """
     if player == "player2":
-        return '/Volumes/Users/lucas/Dropbox/Coding/ChessPvP/game_pickle'
+        return ''
 
-    return 'game_pickle'
+    return '.game_pickle'
 
 
 def main():
     """
     The main function for running Chess with Pygame
     """
+    greeting()
+
     player = prep_game()
     run = True
     changes = True
@@ -274,5 +274,5 @@ def main():
 
 
 if __name__ == '__main__':
-    greeting()
     main()
+    serve()
