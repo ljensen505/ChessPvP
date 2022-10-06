@@ -5,16 +5,15 @@ The Chess class which contains a majority of the gameplay logic
 """
 from pieces import Pawn, Rook, Bishop, Knight, Queen, King
 from board import Board
-from colorama import init, Fore, Back, Style
 
 
 class Chess:
-    """The main game class. This handles all the logic for the game, and uses two other classes to create
+    """The main game class. This handles all the logic for the game,
+    and uses two other classes to create
     portions of the game as objects."""
 
     def __init__(self):
         """Initialize all data members as private"""
-        init(autoreset=True)  # initialize colorama; always reset colors
         self._board = Board()
         self._turn_count = 0
         self._game_state = "UNFINISHED"
@@ -56,7 +55,7 @@ class Chess:
                 # check for self check
                 for piece in self._pieces:
                     if piece.get_piece_type() == "King":
-                        if piece.get_check() and piece.get_color() == self.get_piece_by_square(sq_to).get_color():
+                        if piece.get_check() and (piece.get_color() == self.get_piece_by_square(sq_to).get_color()):
                             self._move_piece(sq_to, sq_from)
                             if opponent:
                                 opponent._is_captured = False
@@ -91,7 +90,7 @@ class Chess:
 
     def _check_for_check(self):
         """
-        checks all piece targets for check and sets king object attributes accordingly
+        checks all piece targets for check and sets king object attributes
         :return: nothing
         """
         for piece in self._pieces:
@@ -525,36 +524,38 @@ class Chess:
         This method is only used for backend testing.
         :return: nothing
         """
-        for row in range(9):
-            for col in range(9):
-                if col != 0 and row != 8:
-                    if self._board.get_board()[row][col] == '.':
-                        back = Back.LIGHTBLACK_EX
-                    else:
-                        back = Back.LIGHTWHITE_EX
-                else:
-                    back = ''
+        pass
+    
+        # for row in range(9):
+        #     for col in range(9):
+        #         if col != 0 and row != 8:
+        #             if self._board.get_board()[row][col] == '.':
+        #                 back = Back.LIGHTBLACK_EX
+        #             else:
+        #                 back = Back.LIGHTWHITE_EX
+        #         else:
+        #             back = ''
 
-                square_index = f"{col}{row}"
-                square_name = self._convert_to_coord(square_index)
-                piece = self.get_piece_by_square(square_name)
+        #         square_index = f"{col}{row}"
+        #         square_name = self._convert_to_coord(square_index)
+        #         piece = self.get_piece_by_square(square_name)
 
-                print(back + ' ', end='')
-                if self.get_square_occupant(square_name) != "NONE":
-                    if self.get_square_occupant(square_name) == 'W':
-                        color = Fore.LIGHTMAGENTA_EX
-                    else:
-                        color = Fore.BLACK
-                    print(color + back + Style.BRIGHT + piece.get_sprite(), end='')
-                else:
-                    tile = self._board.get_board()[row][col]
-                    if tile == '`' or tile == '.':
-                        print(back + ' ', end='')
-                    else:
-                        print(back + tile, end='')
-                print(back + ' ', end='')
+        #         print(back + ' ', end='')
+        #         if self.get_square_occupant(square_name) != "NONE":
+        #             if self.get_square_occupant(square_name) == 'W':
+        #                 color = Fore.LIGHTMAGENTA_EX
+        #             else:
+        #                 color = Fore.BLACK
+        #             print(color + back + Style.BRIGHT + piece.get_sprite(), end='')
+        #         else:
+        #             tile = self._board.get_board()[row][col]
+        #             if tile == '`' or tile == '.':
+        #                 print(back + ' ', end='')
+        #             else:
+        #                 print(back + tile, end='')
+        #         print(back + ' ', end='')
 
-            print('\n', end='')
+        #     print('\n', end='')
 
     def is_occupied(self, square):
         """

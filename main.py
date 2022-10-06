@@ -11,7 +11,6 @@ import pygame
 
 from chess import Chess
 from errors import CLAError
-from server import serve
 
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
@@ -172,9 +171,6 @@ def prep_game():
 
     player = get_player()
 
-    # if player == "host":
-    #     serve()  # start the server to share the pickle file
-
     return player
 
 
@@ -276,4 +272,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    serve()
