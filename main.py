@@ -10,22 +10,11 @@ import sys
 import pygame
 
 from chess import Chess
-from errors import CLAError
+
 
 WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 BOARD = pygame.image.load(os.path.join('assets', 'chess_board.png'))
-
-
-def get_player():
-    """
-    Checks for valid and existent command line arguments
-    :return: bool
-    """
-    if len(sys.argv) != 2 or sys.argv[1].lower() not in ["host", "player2"]:
-        raise CLAError("One command line argument required. Must specify 'host' or 'player2'")
-
-    return sys.argv[1]
 
 
 def pos_to_pix(pos, width):
@@ -112,11 +101,16 @@ def draw_window(chess, sq_from=None, width=WIDTH, height=HEIGHT):
                 if sq_from == piece.get_position():
                     mouse_pos = pygame.mouse.get_pos()
                     mouse_pos = (mouse_pos[0] - 50, mouse_pos[1] - 50)
-                    WIN.blit(pygame.transform.scale(image, (img_size, img_size)), mouse_pos)
+                    WIN.blit(pygame.transform.scale(image,
+                                                    (img_size, img_size)),
+                             mouse_pos)
                 else:
-                    WIN.blit(pygame.transform.scale(image, (img_size, img_size)), (pos_to_pix(piece.get_position(), width)))
+                    WIN.blit(pygame.transform.scale(image,
+                                                    (img_size, img_size)),
+                             (pos_to_pix(piece.get_position(), width)))
             else:
-                WIN.blit(pygame.transform.scale(image, (img_size, img_size)), (pos_to_pix(piece.get_position(), width)))
+                WIN.blit(pygame.transform.scale(image, (img_size, img_size)),
+                         (pos_to_pix(piece.get_position(), width)))
 
     pygame.display.update()
 
@@ -128,7 +122,8 @@ def draw_window(chess, sq_from=None, width=WIDTH, height=HEIGHT):
 
 def scale_board(chess):
     """
-    Scales the board and window based on the user resizing the window. Maintains scale aspect ratio.
+    Scales the board and window based on the user resizing the window.
+    Maintains aspect ratio.
     """
     x, y = WIN.get_size()
     x = max(x, y)
@@ -145,15 +140,16 @@ def greeting():
 
 def open_game(game_save):
     """
-    Opens the pickle file and restores (or initializes) the playable Chess object
+    Opens the pickle file and restores (or initializes) the Chess object
     :param game_save: file path
     :return: chess object
     """
     try:
         dbfile = open(game_save, 'rb')
         chess = pickle.load(dbfile)
-    except:
-        # something has gone wrong with the file, such as it not existing, so let's start over.
+    except Exception:
+        # something has gone wrong with the file, such as it not existing
+        # create a new Chess object
         chess = Chess()
 
     return chess
@@ -169,22 +165,6 @@ def prep_game():
     icon = pygame.image.load('assets/white_queen.png')
     pygame.display.set_icon(icon)
 
-    player = get_player()
-
-    return player
-
-
-def get_path(player):
-    """
-    Determines the file path for the pickled save file
-    :param player: string of which player is being played as
-    :return: string: file path
-    """
-    if player == "player2":
-        return ''
-
-    return '.game_pickle'
-
 
 def main():
     """
@@ -192,14 +172,13 @@ def main():
     """
     greeting()
 
-    player = prep_game()
     run = True
     changes = True
     move = {
         'sq_from': None,
         'sq_to': None
     }
-    game_save = get_path(player)  # specify file path based upon player number
+    game_save = '.game_pickle'
 
     while run:
         # the main loop for running the game
@@ -207,15 +186,17 @@ def main():
         x = max(x, y)
         y = max(x, y)
         width = x
-        border = (5 / 90) * width  # these numbers come from the original file dimensions
+        # these numbers come from the original file dimensions
+        border = (5 / 90) * width
         tile_size = (1 / 9) * width
 
         # open the pickle file to restore a game, or start from scratch
         try:
             dbfile = open(game_save, 'rb')
             chess = pickle.load(dbfile)
-        except:
-            # something has gone wrong with the file, such as it not existing, so let's start over.
+        except Exception:
+            # something has gone wrong with the file, such as it not existing
+            # start over with a new Chess object
             chess = Chess()
 
         # get user input
@@ -231,14 +212,19 @@ def main():
                 run = False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                move['sq_to'] = None  # verifies there isn't a lingering value in 'sq_to' from a random click
+                # verifies there isn't a lingering value in 'sq_to' from a
+                # random click
+                move['sq_to'] = None
+
                 coord = pygame.mouse.get_pos()
-                if border < coord[0] < width - border and border < coord[1] < width - border:
+                if (border < coord[0] < width - border
+                        and border < coord[1] < width - border):
                     move['sq_from'] = pix_to_coord(coord, border, tile_size)
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 coord = pygame.mouse.get_pos()
-                if border < coord[0] < width - border and border < coord[1] < width - border:
+                if (border < coord[0] < width - border
+                        and border < coord[1] < width - border):
                     move['sq_to'] = pix_to_coord(coord, border, tile_size)
 
             if move['sq_from'] and move['sq_to']:

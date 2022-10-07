@@ -55,7 +55,10 @@ class Chess:
                 # check for self check
                 for piece in self._pieces:
                     if piece.get_piece_type() == "King":
-                        if piece.get_check() and (piece.get_color() == self.get_piece_by_square(sq_to).get_color()):
+                        if (piece.get_check()
+                                and (piece.get_color() ==
+                                     self.get_piece_by_square(sq_to).
+                                     get_color())):
                             self._move_piece(sq_to, sq_from)
                             if opponent:
                                 opponent._is_captured = False
@@ -126,9 +129,11 @@ class Chess:
             targets = []
             for move in piece.get_legal_moves():
                 if self.get_piece_by_square(move):
-                    if self.get_piece_by_square(move).get_color() != piece.get_color():
+                    if (self.get_piece_by_square(move).get_color()
+                            != piece.get_color()):
                         if piece.get_piece_type() == "Pawn":
-                            # pawn is unique in being only able to attack diagonally
+                            # pawn is unique in being only able to
+                            # attack diagonally
                             if move[0] != piece.get_position():
                                 targets.append(move)
                         else:
@@ -147,7 +152,8 @@ class Chess:
         # TODO add check for putting oneself into check
         if self.get_active_player() == piece.get_color():
             if sq_from != sq_to:
-                if self._game_state == "UNFINISHED" or self._game_state == "CHECK":
+                if (self._game_state == "UNFINISHED"
+                        or self._game_state == "CHECK"):
                     if sq_to in self.legal_moves(sq_from):
                         if target:
                             if piece.get_color() != target.get_color():
@@ -195,7 +201,8 @@ class Chess:
             if self.get_square_occupant(square) == 'NONE':
                 possible.append(square)
             square = f"{sq_from[0]}{int(sq_from[1]) + 2}"
-            if not pawn.get_has_moved() and self.get_square_occupant(square) == 'NONE':
+            if (not pawn.get_has_moved()
+                    and self.get_square_occupant(square) == 'NONE'):
                 possible.append(square)
             square = f"{chr(ord(sq_from[0]) + 1)}{int(sq_from[1]) + 1}"
             if self.get_square_occupant(square) == 'B':
@@ -210,7 +217,8 @@ class Chess:
             if self.get_square_occupant(square) == 'NONE':
                 possible.append(square)
             square = f"{sq_from[0]}{int(sq_from[1]) - 2}"
-            if not pawn.get_has_moved() and self.get_square_occupant(square) == 'NONE':
+            if (not pawn.get_has_moved()
+                    and self.get_square_occupant(square) == 'NONE'):
                 possible.append(square)
             square = f"{chr(ord(sq_from[0]) + 1)}{int(sq_from[1]) - 1}"
             if self.get_square_occupant(square) == 'W':
@@ -222,8 +230,10 @@ class Chess:
         valid = []
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     valid.append(move)
 
         return valid
@@ -241,8 +251,10 @@ class Chess:
         valid = []
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     valid.append(move)
 
         return valid
@@ -267,8 +279,10 @@ class Chess:
         valid = []
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     valid.append(move)
 
         return valid
@@ -286,8 +300,10 @@ class Chess:
         valid = []
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     valid.append(move)
 
         return valid
@@ -309,8 +325,10 @@ class Chess:
         valid = []
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     valid.append(move)
 
         return valid
@@ -321,7 +339,8 @@ class Chess:
         :param sq_from: origination square
         :return: list of valid desinations
         """
-        king = self.get_piece_by_square(sq_from)
+        # king = self.get_piece_by_square(sq_from)
+
         valid = []
         possible = [
             f"{sq_from[0]}{int(sq_from[1]) + 1}",
@@ -335,8 +354,10 @@ class Chess:
         ]
 
         for move in possible:
-            if move[0] in self._valid_alpha() and move[1] in self._valid_nums():
-                if self.get_square_occupant(move) != self.get_square_occupant(sq_from):
+            if (move[0] in self._valid_alpha()
+                    and move[1] in self._valid_nums()):
+                if (self.get_square_occupant(move)
+                        != self.get_square_occupant(sq_from)):
                     # if not self.self_check(sq_from, move):
                     valid.append(move)
 
@@ -357,7 +378,8 @@ class Chess:
                     color = 'White'
                 else:
                     color = 'Black'
-                print(f"{color} {opponent.get_piece_type()} has been captured!")
+                print(f"{color} {opponent.get_piece_type()}\
+                    has been captured!")
                 opponent.set_is_captured()
 
         piece.set_has_moved()
@@ -379,7 +401,8 @@ class Chess:
                 continue
             if self.get_square_occupant(square) == piece.get_color():
                 break
-            if square[0] not in self._valid_alpha() or square[1] not in self._valid_nums():
+            if (square[0] not in self._valid_alpha()
+                    or square[1] not in self._valid_nums()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -392,7 +415,8 @@ class Chess:
                 continue
             if self.get_square_occupant(square) == piece.get_color():
                 break
-            if square[0] not in self._valid_alpha() or square[1] not in self._valid_nums():
+            if (square[0] not in self._valid_alpha()
+                    or square[1] not in self._valid_nums()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -405,7 +429,8 @@ class Chess:
                 continue
             if self.get_square_occupant(square) == piece.get_color():
                 break
-            if square[0] not in self._valid_alpha() or square[1] not in self._valid_nums():
+            if (square[0] not in self._valid_alpha()
+                    or square[1] not in self._valid_nums()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -418,7 +443,8 @@ class Chess:
                 continue
             if self.get_square_occupant(square) == piece.get_color():
                 break
-            if square[0] not in self._valid_alpha() or square[1] not in self._valid_nums():
+            if (square[0] not in self._valid_alpha()
+                    or square[1] not in self._valid_nums()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -436,12 +462,14 @@ class Chess:
         # add valid moves to a list, then check sq_to against list
         valid = []
 
-        # check up and to right - these checks can go off-board since moves are already verified as on-board
+        # check up and to right
+        # these checks can go off-board since moves are already verified
         for i in range(8):
             square = f"{chr(ord(sq_from[0]) + i)}{int(sq_from[1]) + i}"
             if square == sq_from:
                 continue
-            if self.get_square_occupant(square) == piece.get_color() or square[0] not in self._valid_alpha():
+            if (self.get_square_occupant(square) == piece.get_color()
+                    or square[0] not in self._valid_alpha()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -452,7 +480,8 @@ class Chess:
             square = f"{chr(ord(sq_from[0]) + i)}{int(sq_from[1]) - i}"
             if square == sq_from:
                 continue
-            if self.get_square_occupant(square) == piece.get_color() or square[0] not in self._valid_alpha():
+            if (self.get_square_occupant(square) == piece.get_color()
+                    or square[0] not in self._valid_alpha()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -463,7 +492,8 @@ class Chess:
             square = f"{chr(ord(sq_from[0]) - i)}{int(sq_from[1]) - i}"
             if square == sq_from:
                 continue
-            if self.get_square_occupant(square) == piece.get_color() or square[0] not in self._valid_alpha():
+            if (self.get_square_occupant(square) == piece.get_color()
+                    or square[0] not in self._valid_alpha()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -474,7 +504,8 @@ class Chess:
             square = f"{chr(ord(sq_from[0]) - i)}{int(sq_from[1]) + i}"
             if square == sq_from:
                 continue
-            if self.get_square_occupant(square) == piece.get_color() or square[0] not in self._valid_alpha():
+            if (self.get_square_occupant(square) == piece.get_color()
+                    or square[0] not in self._valid_alpha()):
                 break
             valid.append(square)
             if self.is_occupied(square):
@@ -484,7 +515,8 @@ class Chess:
 
     def _make_pieces(self):
         """
-        A private method that creates pieces of each color. Should never be accessed except by init
+        A private method that creates pieces of each color.
+        Should never be accessed except by init
         :return: a list of piece objects
         """
         pieces = []
@@ -525,7 +557,7 @@ class Chess:
         :return: nothing
         """
         pass
-    
+
         # for row in range(9):
         #     for col in range(9):
         #         if col != 0 and row != 8:
@@ -546,7 +578,8 @@ class Chess:
         #                 color = Fore.LIGHTMAGENTA_EX
         #             else:
         #                 color = Fore.BLACK
-        #             print(color + back + Style.BRIGHT + piece.get_sprite(), end='')
+        #             print(color + back + Style.BRIGHT
+        #               + piece.get_sprite(), end=''
         #         else:
         #             tile = self._board.get_board()[row][col]
         #             if tile == '`' or tile == '.':
@@ -699,4 +732,3 @@ class Chess:
 if __name__ == "__main__":
     game = Chess()
     game.print_board()
-
