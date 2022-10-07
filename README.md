@@ -1,68 +1,49 @@
-Chess PvP || Beaverhacks Spring 2022
+Chess PvP (v2) || Beaverhacks Spring 2022
 ==============================
+Updated October 2022
 
-Chess built with Pygame, which can either be played alone or between two computers over the same network.  This project 
-was built with Python and Pygame
+Chess built with Pygame, which can either be played alone or between two computers.  Internet access required.
 
-Getting Started
+Getting Started - Mac or Linux
 ------------
-- Clone this repo to your machine. <br>
-- Create a virtual environment in the main directory <br>
-`python3 -m venv venv` or with your preferred method. <br>Followed by:<br>
-`activate your venv` <br>
-`pip install -r requirements.txt` <br>
+
+<ul>
+<li>Clone this repo to your machine<br><code>git clone https://github.com/ljensen505/ChessPvP.git</code></li>
+<li>Navigate to the newly created directory<br><code>cd ChessPvP</code></li>
+<li>create a virtual environment<br><code>python3 -m venv venv</code></li>
+<li>activate the environment<br><code>source venv/bin/activate</code></li>
+<li>Install dependencies<br><code>pip install -r requirements.txt</code></li>
+<li>Start the game<br><code>python main.py</code></li>
+</ul>
 
 
 The project contains several files, which are described as follows:
 - `main.py` The main file for playing the game
-- `server.py` A very simple server which allows the pickle file to be shared over the local network  
+- `server.py` This is not a server, but is used to communicate with the RESTish API  
 - `pieces.py` Various classes for each Chess piece
 - `board.py`  A class for creating the board. Only used for backend testing.
 - `/assets` A collection of images that are used to render the game window 
 
-
-To run the game
-------------
-
-To play a game of Chess on a single computer:
-
-From the project directory, run `python main.py host`  
-
-Depending on your OS, you may need to use `python3` instead. This will launch the game and show a few helpful tips, which are as follows
-- Press `esc` or close the window to quit the game
-- Press `c` to clear the game and start anew.
-- Your server will start automatically, though a 2nd person joining is not necessary.
-
-To join the game
-------------
-
-From the 2nd computer, connect to the same network as the host, run:
-
-`python game.py player2`
-
-Including `host` or `player2` as a command line argument when starting the program is a requirement.
-
- Players should decide amongst themselves who will be which color. Just like a real game of Chess, there is no mechanism
-in place to prevent a player from touching the other players pieces, or to prevent a third person from coming by and messing things up. 
- We are all adults here.
 
 Cool features!
 ------------
 - The game window can be resized! Aspect ratios of the window and all assets are maintained. This has been great for playing on computers with different monitor sizes.
 - You can play a game of Chess exclusively in the terminal, if you so choose. Just run `chess.py` instead, with no command line arguments
 - Game data persists via pickling. Even if only playing on one computer, you can exit the game and resume it later
+- This communicates with a RESTish API which is hosted in my living room: http://api.chess.lucasjensen.me also: https://github.com/ljensen505/ChessAPI
 
 Known issues
 ------------
 - The game logic is incomplete. A few more complex moves, such an en passant and castling, have not been implemented
 - There is no visual prompt in the game window for Check, though a message is printed in the terminal
 - There is no prompt whatsoever for checkmate, though the game does lock up
-- The way this is served locally is very specific to my setup. This app is not flexible and will not other machines without significant modification. As such, I'd like to re-write it at some point to use CRUD operations and a real database.
+- There is no enforcement of who moves which piece (just like the real world!)
+- Due to speed limitations of the RESTish API server, lag is common and can be frustrating
 
 Chess in action
 ------------
 
-<a href="https://www.youtube.com/watch?v=y30Trim7Tio&ab_channel=LucasJensen">Demo on YouTube</a>
+<a href="https://www.youtube.com/watch?v=y30Trim7Tio&ab_channel=LucasJensen">Demo on YouTube (v1)</a>
 
 ![Start](assets/start_board.png)
 
