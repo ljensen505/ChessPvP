@@ -5,6 +5,7 @@ The Chess class which contains a majority of the gameplay logic
 """
 from pieces import Pawn, Rook, Bishop, Knight, Queen, King
 from board import Board
+from time import time
 
 
 class Chess:
@@ -12,14 +13,22 @@ class Chess:
     and uses two other classes to create
     portions of the game as objects."""
 
-    def __init__(self):
+    def __init__(self, creation=time()):
         """Initialize all data members as private"""
+        print(f"NEW CHESS OBJECT @ {creation}")
         self._board = Board()
         self._turn_count = 0
+        self._time = creation
         self._game_state = "UNFINISHED"
         self._pieces = self._make_pieces()
         self._update_legal_moves()
         self._update_targets()
+
+    def get_time(self):
+        return self._time
+
+    def get_turn(self):
+        return self._turn_count
 
     def get_pieces(self):
         """returns a list of all pieces"""
@@ -69,7 +78,7 @@ class Chess:
                             return False
 
                 self._turn_count += 1
-
+                self._time = time()
                 return True
 
         return False

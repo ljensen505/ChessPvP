@@ -5,11 +5,13 @@ The main file for playing chess with Pygame over a local network
 """
 import os
 import pickle
+from re import T
 import sys
 
 import pygame
 
 from chess import Chess
+from server import Server
 
 
 WIDTH, HEIGHT = 800, 800
@@ -146,10 +148,12 @@ def open_game(game_save):
     """
     try:
         dbfile = open(game_save, 'rb')
+        print("check line 151")
         chess = pickle.load(dbfile)
     except Exception:
         # something has gone wrong with the file, such as it not existing
         # create a new Chess object
+        print("check line 156")
         chess = Chess()
 
     return chess
@@ -171,7 +175,8 @@ def main():
     The main function for running Chess with Pygame
     """
     greeting()
-
+    making_move = False
+    loop_count = 0  # only make get requests on certain iterations
     run = True
     changes = True
     move = {
@@ -182,6 +187,11 @@ def main():
 
     while run:
         # the main loop for running the game
+        if loop_count == 30:
+            loop_count = 0
+        # print(f"making_move is {making_move}")
+        # print(f"loop_count is {loop_count}")
+        clock.tick(20)
         x, y = WIN.get_size()
         x = max(x, y)
         y = max(x, y)
@@ -193,11 +203,27 @@ def main():
         # open the pickle file to restore a game, or start from scratch
         try:
             dbfile = open(game_save, 'rb')
+            # print("check line 206")
             chess = pickle.load(dbfile)
+
         except Exception:
             # something has gone wrong with the file, such as it not existing
             # start over with a new Chess object
+            print("check line 212")
             chess = Chess()
+
+        if loop_count % 15 == 0 and not making_move:
+            api_state = server.get_game()
+            api_time = float(api_state['time'])
+            api_turn = int(api_state['turn'])
+
+            if api_time > chess.get_time():
+                if api_turn == 0:
+                    chess = Chess(creation=api_time)
+                    changes = True
+                elif api_turn > chess.get_turn():
+                    chess.make_move(api_state['from'], api_state['to'])
+                    changes = True
 
         # get user input
         for event in pygame.event.get():
@@ -206,8 +232,11 @@ def main():
                     run = False
                 elif event.key == pygame.K_c:
                     # clears the board to start a new game
-                    chess = Chess()
                     changes = True
+
+                    creation = server.reset()['time']
+                    chess = Chess(creation=creation)
+
             elif event.type == pygame.QUIT:
                 run = False
 
@@ -220,6 +249,8 @@ def main():
                 if (border < coord[0] < width - border
                         and border < coord[1] < width - border):
                     move['sq_from'] = pix_to_coord(coord, border, tile_size)
+                    
+                making_move = True
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 coord = pygame.mouse.get_pos()
@@ -230,7 +261,14 @@ def main():
             if move['sq_from'] and move['sq_to']:
                 # make the actual move
                 chess.make_move(move['sq_from'], move['sq_to'])
-                # print("made move!")
+
+                # TODO: make request here
+                # =========================
+                server.make_move(
+                    chess.get_turn(),
+                    {"from": move['sq_from'], "to": move['sq_to']},
+                    chess.get_time())
+                # =========================
                 changes = True
 
                 # reset
@@ -238,6 +276,8 @@ def main():
                     'sq_from': None,
                     'sq_to': None
                 }
+                
+                making_move = False
 
         # update window
         if move['sq_from']:
@@ -251,10 +291,14 @@ def main():
             pickle.dump(chess, dbfile)
             changes = False
             # print("game saved!")
+            
+        loop_count += 1
 
     pygame.quit()
     sys.exit()
 
 
 if __name__ == '__main__':
+    clock = pygame.time.Clock()
+    server = Server()
     main()
