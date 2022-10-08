@@ -14,6 +14,7 @@ Getting Started - Mac or Linux
 <li>activate the environment<br><code>source venv/bin/activate</code></li>
 <li>Install dependencies<br><code>pip install -r requirements.txt</code></li>
 <li>Start the game<br><code>python main.py</code></li>
+<li>When finished, deactivate the venv<br><code>deactivate</code></li>
 </ul>
 
 

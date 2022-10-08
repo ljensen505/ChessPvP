@@ -5,7 +5,6 @@ The main file for playing chess with Pygame over a local network
 """
 import os
 import pickle
-from re import T
 import sys
 
 import pygame
@@ -19,7 +18,7 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 BOARD = pygame.image.load(os.path.join('assets', 'chess_board.png'))
 
 
-def pos_to_pix(pos, width):
+def pos_to_pix(pos: str, width: int) -> tuple:
     """
     converts a coordinate from the chess class to a pixel position
     :param pos: position, ex. 'a1'
@@ -37,8 +36,10 @@ def pos_to_pix(pos, width):
     return pix_tuple
 
 
-def pix_to_coord(coord, border, tile_size):
-    """converts coordinate (tuple) to a position"""
+def pix_to_coord(coord: tuple, border: int, tile_size: float):
+    """
+    converts coordinate (tuple) to a position
+    """
     x = coord[0]
     y = coord[1]
     pos = []
@@ -148,12 +149,10 @@ def open_game(game_save):
     """
     try:
         dbfile = open(game_save, 'rb')
-        print("check line 151")
         chess = pickle.load(dbfile)
     except Exception:
         # something has gone wrong with the file, such as it not existing
         # create a new Chess object
-        print("check line 156")
         chess = Chess()
 
     return chess
@@ -174,7 +173,6 @@ def main():
     """
     The main function for running Chess with Pygame
     """
-    greeting()
     making_move = False
     loop_count = 0  # only make get requests on certain iterations
     run = True
@@ -187,11 +185,9 @@ def main():
 
     while run:
         # the main loop for running the game
-        if loop_count == 30:
-            loop_count = 0
-        # print(f"making_move is {making_move}")
-        # print(f"loop_count is {loop_count}")
-        clock.tick(20)
+
+        loop_count %= 30  # no need to exceed 30
+        clock.tick(30)
         x, y = WIN.get_size()
         x = max(x, y)
         y = max(x, y)
@@ -203,16 +199,15 @@ def main():
         # open the pickle file to restore a game, or start from scratch
         try:
             dbfile = open(game_save, 'rb')
-            # print("check line 206")
             chess = pickle.load(dbfile)
 
         except Exception:
             # something has gone wrong with the file, such as it not existing
             # start over with a new Chess object
-            print("check line 212")
             chess = Chess()
 
-        if loop_count % 15 == 0 and not making_move:
+        if loop_count == 0 and not making_move:
+            # check with API every time loop counter resets
             api_state = server.get_game()
             api_time = float(api_state['time'])
             api_turn = int(api_state['turn'])
@@ -249,7 +244,7 @@ def main():
                 if (border < coord[0] < width - border
                         and border < coord[1] < width - border):
                     move['sq_from'] = pix_to_coord(coord, border, tile_size)
-                    
+
                 making_move = True
 
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -262,13 +257,11 @@ def main():
                 # make the actual move
                 chess.make_move(move['sq_from'], move['sq_to'])
 
-                # TODO: make request here
-                # =========================
                 server.make_move(
                     chess.get_turn(),
                     {"from": move['sq_from'], "to": move['sq_to']},
                     chess.get_time())
-                # =========================
+
                 changes = True
 
                 # reset
@@ -276,7 +269,7 @@ def main():
                     'sq_from': None,
                     'sq_to': None
                 }
-                
+
                 making_move = False
 
         # update window
@@ -290,8 +283,7 @@ def main():
             dbfile = open(game_save, 'wb')
             pickle.dump(chess, dbfile)
             changes = False
-            # print("game saved!")
-            
+
         loop_count += 1
 
     pygame.quit()
@@ -299,6 +291,7 @@ def main():
 
 
 if __name__ == '__main__':
+    greeting()
     clock = pygame.time.Clock()
     server = Server()
     main()

@@ -3,7 +3,7 @@ Written by Lucas Jensen
 Last updated 3/26/2022
 The Chess class which contains a majority of the gameplay logic
 """
-from pieces import Pawn, Rook, Bishop, Knight, Queen, King
+from pieces import Pawn, Rook, Bishop, Knight, Queen, King, Piece
 from board import Board
 from time import time
 
@@ -15,7 +15,6 @@ class Chess:
 
     def __init__(self, creation=time()):
         """Initialize all data members as private"""
-        print(f"NEW CHESS OBJECT @ {creation}")
         self._board = Board()
         self._turn_count = 0
         self._time = creation
@@ -84,7 +83,7 @@ class Chess:
         return False
 
     def _is_checkmate(self, sq_from, sq_to):
-        """TODO"""
+        """TODO: this doesn't do anything meaningful"""
         for piece in self._pieces:
             if piece.get_color() == self.get_active_player():
                 for move in piece.get_legal_moves():
@@ -379,7 +378,7 @@ class Chess:
         :param sq_to: destination
         :return: nothing
         """
-        piece = self.get_piece_by_square(sq_from)
+        piece: Piece = self.get_piece_by_square(sq_from)
         opponent = self.get_piece_by_square(sq_to)
         if opponent:
             if opponent.get_color() != piece.get_color():
@@ -387,12 +386,21 @@ class Chess:
                     color = 'White'
                 else:
                     color = 'Black'
-                print(f"{color} {opponent.get_piece_type()}\
-                    has been captured!")
+                print(f"{color} {opponent.get_piece_type()} captured!")
                 opponent.set_is_captured()
 
         piece.set_has_moved()
         piece.set_position(sq_to)
+
+        # handle pawn promotion. Just give them a Queen.
+        if sq_to[1] == '8' and piece.get_color() == 'W':
+            piece.set_is_captured()
+            queen = Queen('W', sq_to)
+            self._pieces.append(queen)
+        elif sq_to[1] == '1' and piece.get_color() == 'B':
+            piece.set_is_captured()
+            queen = Queen('B', sq_to)
+            self._pieces.append(queen)
 
     def _find_horz_vert(self, piece, sq_from):
         """
@@ -559,46 +567,6 @@ class Chess:
 
         return pieces
 
-    def print_board(self):
-        """
-        prints the current board, including grid labels
-        This method is only used for backend testing.
-        :return: nothing
-        """
-        pass
-
-        # for row in range(9):
-        #     for col in range(9):
-        #         if col != 0 and row != 8:
-        #             if self._board.get_board()[row][col] == '.':
-        #                 back = Back.LIGHTBLACK_EX
-        #             else:
-        #                 back = Back.LIGHTWHITE_EX
-        #         else:
-        #             back = ''
-
-        #         square_index = f"{col}{row}"
-        #         square_name = self._convert_to_coord(square_index)
-        #         piece = self.get_piece_by_square(square_name)
-
-        #         print(back + ' ', end='')
-        #         if self.get_square_occupant(square_name) != "NONE":
-        #             if self.get_square_occupant(square_name) == 'W':
-        #                 color = Fore.LIGHTMAGENTA_EX
-        #             else:
-        #                 color = Fore.BLACK
-        #             print(color + back + Style.BRIGHT
-        #               + piece.get_sprite(), end=''
-        #         else:
-        #             tile = self._board.get_board()[row][col]
-        #             if tile == '`' or tile == '.':
-        #                 print(back + ' ', end='')
-        #             else:
-        #                 print(back + tile, end='')
-        #         print(back + ' ', end='')
-
-        #     print('\n', end='')
-
     def is_occupied(self, square):
         """
         Determines of a specified square is occupied
@@ -740,4 +708,3 @@ class Chess:
 
 if __name__ == "__main__":
     game = Chess()
-    game.print_board()
