@@ -17,12 +17,10 @@ from helpers import greeting, pix_to_coord, pos_to_pix, load_game
 class Game:
     def __init__(self, chess: Chess):
         self.WIDTH, self.HEIGHT = 800, 800
-        self.WIN = pygame.display.set_mode((self.WIDTH, self.HEIGHT),
-                                           pygame.RESIZABLE)
-        self.BOARD = pygame.image.load(os.path.join('assets',
-                                                    'chess_board.png'))
+        self.WIN = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
+        self.BOARD = pygame.image.load(os.path.join("assets", "chess_board.png"))
         self.chess = chess
-        self.game_save = '.game_pickle'
+        self.game_save = ".game_pickle"
         self.server = Server()
 
     def scale_board(self):
@@ -33,8 +31,8 @@ class Game:
         x, y = self.WIN.get_size()
         x = max(x, y)
         y = max(x, y)
-        self.draw_window(self.chess, width=x, height=y)
-        pygame.display.set_mode((x, y), pygame.RESIZABLE)
+        self.draw_window()
+        pygame.display.set_mode((x, y))
 
     def draw_window(self, sq_from=None):
         """
@@ -44,9 +42,9 @@ class Game:
         :param width: width of the Pygame window
         :param height: height of the Pygame window
         """
-        self.WIN.blit(pygame.transform.scale(self.BOARD,
-                                             (self.WIDTH, self.HEIGHT)),
-                      (0, 0))
+        self.WIN.blit(
+            pygame.transform.scale(self.BOARD, (self.WIDTH, self.HEIGHT)), (0, 0)
+        )
 
         for piece in self.chess.get_pieces():
             if not piece.get_is_captured():
@@ -57,28 +55,27 @@ class Game:
                     if sq_from == piece.get_position():
                         mouse_pos = pygame.mouse.get_pos()
                         mouse_pos = (mouse_pos[0] - 50, mouse_pos[1] - 50)
-                        self.WIN.blit(pygame.transform.scale(image,
-                                                             (img_size,
-                                                              img_size)),
-                                      mouse_pos)
+                        self.WIN.blit(
+                            pygame.transform.scale(image, (img_size, img_size)),
+                            mouse_pos,
+                        )
                     else:
-                        self.WIN.blit(pygame.transform.scale(image,
-                                                             (img_size,
-                                                              img_size)),
-                                      (pos_to_pix(piece.get_position(),
-                                                  self.WIDTH)))
+                        self.WIN.blit(
+                            pygame.transform.scale(image, (img_size, img_size)),
+                            (pos_to_pix(piece.get_position(), self.WIDTH)),
+                        )
                 else:
-                    self.WIN.blit(pygame.transform.scale(image,
-                                                         (img_size, img_size)),
-                                  (pos_to_pix(piece.get_position(),
-                                              self.WIDTH)))
+                    self.WIN.blit(
+                        pygame.transform.scale(image, (img_size, img_size)),
+                        (pos_to_pix(piece.get_position(), self.WIDTH)),
+                    )
 
         pygame.display.update()
 
         # redraw the window if it has been resized
-        w, h = pygame.display.get_surface().get_size()
-        if w != self.WIDTH and h != self.HEIGHT:
-            self.scale_board(self.chess)
+        # w, h = pygame.display.get_surface().get_size()
+        # if w != self.WIDTH and h != self.HEIGHT:
+        #     self.scale_board()
 
     def play(self):
         """
@@ -87,10 +84,7 @@ class Game:
         making_move = False
         loop_count = 0  # only make get requests on certain iterations
         run = True
-        move = {
-            'sq_from': None,
-            'sq_to': None
-        }
+        move = {"sq_from": None, "sq_to": None}
 
         while run:
             # the main loop for running the game
@@ -107,8 +101,8 @@ class Game:
             if loop_count == 0 and not making_move:
                 # check with API every time loop counter resets
                 api_state = self.server.get_game()
-                api_time = float(api_state['time'])
-                api_turn = int(api_state['turn'])
+                api_time = float(api_state["time"])
+                api_turn = int(api_state["turn"])
 
                 if api_time > self.chess.get_time():
                     if api_turn == 0:
@@ -116,20 +110,19 @@ class Game:
                         self.chess = Chess(creation=api_time)
                     elif api_turn > self.chess.get_turn():
                         # the opponent has moved
-                        self.chess.make_move(api_state['from'],
-                                             api_state['to'])
+                        self.chess.make_move(api_state["from"], api_state["to"])
 
             # get user input
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # save the game locally and quit
-                        dbfile = open(self.game_save, 'wb')
+                        dbfile = open(self.game_save, "wb")
                         pickle.dump(self.chess, dbfile)
                         run = False
                     elif event.key == pygame.K_c:
                         # clears the board to start a new game
-                        creation = self.server.reset()['time']
+                        creation = self.server.reset()["time"]
                         self.chess = Chess(creation=creation)
 
                 elif event.type == pygame.QUIT:
@@ -138,42 +131,43 @@ class Game:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     # verifies there isn't a lingering value in 'sq_to' from a
                     # random click
-                    move['sq_to'] = None
+                    move["sq_to"] = None
 
                     coord = pygame.mouse.get_pos()
-                    if (border < coord[0] < width - border
-                            and border < coord[1] < width - border):
-                        move['sq_from'] = pix_to_coord(coord, border,
-                                                       tile_size)
+                    if (
+                        border < coord[0] < width - border
+                        and border < coord[1] < width - border
+                    ):
+                        move["sq_from"] = pix_to_coord(coord, border, tile_size)  # type: ignore
 
                     making_move = True
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     coord = pygame.mouse.get_pos()
-                    if (border < coord[0] < width - border
-                            and border < coord[1] < width - border):
-                        move['sq_to'] = pix_to_coord(coord, border, tile_size)
+                    if (
+                        border < coord[0] < width - border
+                        and border < coord[1] < width - border
+                    ):
+                        move["sq_to"] = pix_to_coord(coord, border, tile_size)  # type: ignore
 
-                if move['sq_from'] and move['sq_to']:
+                if move["sq_from"] and move["sq_to"]:
                     # make the actual move
-                    self.chess.make_move(move['sq_from'], move['sq_to'])
+                    self.chess.make_move(move["sq_from"], move["sq_to"])
 
                     self.server.make_move(
                         self.chess.get_turn(),
-                        {"from": move['sq_from'], "to": move['sq_to']},
-                        self.chess.get_time())
+                        {"from": move["sq_from"], "to": move["sq_to"]},
+                        self.chess.get_time(),
+                    )
 
                     # reset
-                    move = {
-                        'sq_from': None,
-                        'sq_to': None
-                    }
+                    move = {"sq_from": None, "sq_to": None}
 
                     making_move = False
 
             # update window
-            if move['sq_from']:
-                self.draw_window(sq_from=move['sq_from'])
+            if move["sq_from"]:
+                self.draw_window(sq_from=move["sq_from"])
             else:
                 self.draw_window()
 
@@ -183,7 +177,7 @@ class Game:
         sys.exit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     greeting()
     clock = pygame.time.Clock()
     game = Game(chess=load_game())
