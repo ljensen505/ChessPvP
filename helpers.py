@@ -30,44 +30,44 @@ def pix_to_coord(coord: tuple, border: int, tile_size: float):
     pos = []
 
     if x < border + tile_size:
-        pos.append('a')
+        pos.append("a")
     elif x < 2 * tile_size + border:
-        pos.append('b')
+        pos.append("b")
     elif x < 3 * tile_size + border:
-        pos.append('c')
+        pos.append("c")
     elif x < 4 * tile_size + border:
-        pos.append('d')
+        pos.append("d")
     elif x < 5 * tile_size + border:
-        pos.append('e')
+        pos.append("e")
     elif x < 6 * tile_size + border:
-        pos.append('f')
+        pos.append("f")
     elif x < 7 * tile_size + border:
-        pos.append('g')
+        pos.append("g")
     elif x < 8 * tile_size + border:
-        pos.append('h')
+        pos.append("h")
     else:
         return False
 
     if y < tile_size + border:
-        pos.append('8')
+        pos.append("8")
     elif y < 2 * tile_size + border:
-        pos.append('7')
+        pos.append("7")
     elif y < 3 * tile_size + border:
-        pos.append('6')
+        pos.append("6")
     elif y < 4 * tile_size + border:
-        pos.append('5')
+        pos.append("5")
     elif y < 5 * tile_size + border:
-        pos.append('4')
+        pos.append("4")
     elif y < 6 * tile_size + border:
-        pos.append('3')
+        pos.append("3")
     elif y < 7 * tile_size + border:
-        pos.append('2')
+        pos.append("2")
     elif y < 8 * tile_size + border:
-        pos.append('1')
+        pos.append("1")
     else:
         return False
 
-    return ''.join(pos)
+    return "".join(pos)
 
 
 def greeting():
@@ -78,10 +78,10 @@ def greeting():
 
 def load_game():
     # load a saved gave if it exists, else start new
-    if os.path.exists('.game_pickle'):
-        dbfile = open('.game_pickle', 'rb')
+    try:
+        dbfile = open(".game_pickle", "rb")
         chess = pickle.load(dbfile)
-    else:
+    except Exception:
         chess = Chess()
 
     return chess

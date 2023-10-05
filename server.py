@@ -3,14 +3,12 @@ import requests
 from dotenv import load_dotenv
 from os import getenv
 
+load_dotenv(override=True)
+
 
 class Server:
     def __init__(self) -> None:
-        load_dotenv()
         self.HOST: str = getenv("HOST")  # type: ignore
-
-        if self.HOST is None:
-            raise Exception("error reading from .env")
 
     def get_root(self) -> dict:
         res: requests.Response = requests.get(self.HOST)

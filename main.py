@@ -8,6 +8,7 @@ import pickle
 import sys
 
 import pygame
+from dotenv import load_dotenv
 
 from chess import Chess
 from server import Server
